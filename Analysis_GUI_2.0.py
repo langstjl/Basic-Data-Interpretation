@@ -87,6 +87,10 @@ file_1_path, name_entry_for_file = select_file()
 
 df1 = pd.read_csv(file_1_path)
 
+df1_columns = list(df1.columns)
+columns_for_window = { 'File Columns' : df1_columns }
+column_position_for_window = { 'Column Position' : datafile_column_position_list }
+
 def enter_columns_for_analysis():
     global entry1_string, entry2_string
     def submit_function_for_column():
@@ -97,8 +101,20 @@ def enter_columns_for_analysis():
     column_entry.title("Enter the column positions you wish to analyze.")
 
     tk.Label(column_entry, 
+             text = "The column names and positions are displayed below:",
+             font = ("Arial", 16)).pack(pady = 10)
+    tk.Label(column_entry, 
+             text = f"{columns_for_window}",
+             font = ("Arial", 12)).pack(pady = 8)
+    tk.Label(column_entry, 
+             text = f"{column_position_for_window}",
+             font = ("Arial", 12)).pack(pady = 8)
+
+    tk.Label(column_entry, 
              text = f"Column positions are between 0 and {max_column}",
              font = ("Arial", 16)).pack(pady = 10)
+ # Most likely can combine the above, definitely needs some filtering for the columns. 
+ # Just want it added for now. 
     
     entry1 = tk.IntVar()
     entry2 = tk.IntVar()
@@ -158,6 +174,7 @@ df1['distance_miles'] = df1.apply(
     lambda row: haversine(row[column_position1], row[column_position2], 33.37, -81.96),
     axis=1)
 
+# There must be something I can use other than .os, above utilizes 'filedialog' within tkinter. Look into this.
 def out_to_csv(dfl):
     global name_entry_for_file
     final_file_path = os.path.join(os.path.dirname(file_1_path), 
